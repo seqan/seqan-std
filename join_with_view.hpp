@@ -7,7 +7,7 @@
 
 /*!\file
  * \author Enrico Seiler <enrico.seiler AT fu-berlin.de>
- * \brief Provides seqan3::views::join_with.
+ * \brief Provides seqan::std::views::join_with.
  */
 
 // File might be included from multiple libraries.
