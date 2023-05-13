@@ -32,7 +32,6 @@ using ::std::ranges::views::zip;
 
 #    include "all_view.hpp"
 #    include "concepts.hpp"
-#    include "detail/adaptor_from_functor.hpp"
 #    include "detail/compiler_definitions.hpp"
 #    include "detail/exposition_only.hpp"
 #    include "tuple.hpp"
@@ -231,8 +230,7 @@ private:
     // clang-format off
 SEQAN_STD_NESTED_VISIBILITY
     // clang-format on
-    seqan::std::detail::zip::tuple_or_pair<
-        ::std::ranges::iterator_t<seqan::std::detail::maybe_const<Const, Views>>...>
+    seqan::std::detail::zip::tuple_or_pair<::std::ranges::iterator_t<seqan::std::detail::maybe_const<Const, Views>>...>
         current_;
 
 public:
@@ -481,8 +479,7 @@ private:
     // clang-format off
 SEQAN_STD_NESTED_VISIBILITY
     // clang-format on
-    seqan::std::detail::zip::tuple_or_pair<
-        ::std::ranges::sentinel_t<seqan::std::detail::maybe_const<Const, Views>>...>
+    seqan::std::detail::zip::tuple_or_pair<::std::ranges::sentinel_t<seqan::std::detail::maybe_const<Const, Views>>...>
         end_;
 
 public:
@@ -545,12 +542,6 @@ public:
 
 struct zip_fn
 {
-    template <seqan::std::ranges::viewable_range urng_t>
-    constexpr auto operator()(urng_t && rng) const
-    {
-        return seqan::std::detail::adaptor_from_functor{*this, ::std::forward<urng_t>(rng)};
-    }
-
     template <seqan::std::ranges::viewable_range... urng_ts>
         requires (sizeof...(urng_ts) == 0)
     constexpr auto operator()(urng_ts &&... ranges) const
