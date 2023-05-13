@@ -76,8 +76,7 @@ namespace seqan::std::ranges
 template <::std::ranges::input_range V, ::std::ranges::forward_range Pattern>
     requires ::std::ranges::view<V> && ::std::ranges::input_range<::std::ranges::range_reference_t<V>>
               && ::std::ranges::view<Pattern>
-              && seqan::std::detail::join_with::compatible_joinable_ranges<::std::ranges::range_reference_t<V>,
-                                                                            Pattern>
+              && seqan::std::detail::join_with::compatible_joinable_ranges<::std::ranges::range_reference_t<V>, Pattern>
 class join_with_view :
     public ::std::ranges::view_interface<join_with_view<V, Pattern>>,
     private seqan::std::detail::join_with::cache_helper<::std::ranges::range_reference_t<V>>
@@ -249,11 +248,8 @@ template <::std::ranges::input_range V, ::std::ranges::forward_range Pattern>
           && seqan::std::detail::join_with::compatible_joinable_ranges<::std::ranges::range_reference_t<V>, Pattern>
 template <bool Const>
 class join_with_view<V, Pattern>::iterator :
-    public seqan::std::detail::join_with::iterator_category_t<
-        Const,
-        V,
-        Pattern,
-        seqan::std::detail::join_with::helper<Const, V, Pattern>::ref_is_glvalue>
+    public seqan::std::detail::join_with::
+        iterator_category_t<Const, V, Pattern, seqan::std::detail::join_with::helper<Const, V, Pattern>::ref_is_glvalue>
 {
 private:
     using helper_t = seqan::std::detail::join_with::helper<Const, V, Pattern>;
