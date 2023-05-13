@@ -581,34 +581,34 @@ struct common_type<seqan::std::pair<T1, T2>, ::std::pair<U1, U2>>
 template <class T1, class T2, class U1, class U2, template <class> class TQual, template <class> class UQual>
     requires requires {
                  typename seqan::std::pair<::std::common_reference_t<TQual<T1>, UQual<U1>>,
-                                            ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
+                                           ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
              }
 struct basic_common_reference<seqan::std::pair<T1, T2>, seqan::std::pair<U1, U2>, TQual, UQual>
 {
     using type = seqan::std::pair<::std::common_reference_t<TQual<T1>, UQual<U1>>,
-                                   ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
+                                  ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
 };
 
 template <class T1, class T2, class U1, class U2, template <class> class TQual, template <class> class UQual>
     requires requires {
                  typename seqan::std::pair<::std::common_reference_t<TQual<T1>, UQual<U1>>,
-                                            ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
+                                           ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
              }
 struct basic_common_reference<::std::pair<T1, T2>, seqan::std::pair<U1, U2>, TQual, UQual>
 {
     using type = seqan::std::pair<::std::common_reference_t<TQual<T1>, UQual<U1>>,
-                                   ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
+                                  ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
 };
 
 template <class T1, class T2, class U1, class U2, template <class> class TQual, template <class> class UQual>
     requires requires {
                  typename seqan::std::pair<::std::common_reference_t<TQual<T1>, UQual<U1>>,
-                                            ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
+                                           ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
              }
 struct basic_common_reference<seqan::std::pair<T1, T2>, ::std::pair<U1, U2>, TQual, UQual>
 {
     using type = seqan::std::pair<::std::common_reference_t<TQual<T1>, UQual<U1>>,
-                                   ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
+                                  ::std::common_reference_t<TQual<T2>, UQual<U2>>>;
 };
 
 template <::std::size_t i, class T1, class T2>
@@ -633,8 +633,7 @@ constexpr ::std::tuple_element_t<i, seqan::std::pair<T1, T2>> && get(seqan::std:
 }
 
 template <::std::size_t i, class T1, class T2>
-constexpr ::std::tuple_element_t<i, seqan::std::pair<T1, T2>> const &&
-get(seqan::std::pair<T1, T2> const && t) noexcept
+constexpr ::std::tuple_element_t<i, seqan::std::pair<T1, T2>> const && get(seqan::std::pair<T1, T2> const && t) noexcept
     requires (i < 2)
 {
     return ::std::get<i>(static_cast<::std::pair<T1, T2> const &&>(::std::move(t)));
