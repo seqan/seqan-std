@@ -14,6 +14,7 @@
 #ifndef SEQAN_STD_CHUNK_VIEW
 #define SEQAN_STD_CHUNK_VIEW
 
+#include <cassert>
 #include <ranges>
 
 #ifdef __cpp_lib_ranges_chunk
