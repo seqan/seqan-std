@@ -15,7 +15,7 @@
 #include <cassert>
 #include <ranges>
 
-#ifdef false //__cpp_lib_ranges_chunk_by
+#ifdef __cpp_lib_ranges_chunk_by
 
 namespace seqan::stl::views
 {
