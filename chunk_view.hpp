@@ -52,6 +52,21 @@ constexpr auto to_unsigned_like(T v) noexcept
     return static_cast<std::make_unsigned_t<T>>(v);
 }
 
+//!WORKAROUND MSVC
+// MSVC uses std::_Signed128 as range the type of std::ranges::range_difference_t<V>.
+// For this we require a conversion function.
+#if defined(_MSC_VER) && !defined(__clang__)
+constexpr auto to_unsigned_like(std::_Signed128 v) noexcept
+{
+    return static_cast<uint64_t>(v);
+}
+constexpr auto to_unsigned_like(std::_Unsigned128 v) noexcept
+{
+    return static_cast<uint64_t>(v);
+}
+#endif
+
+
 } // namespace seqan::stl::detail::chunk
 
 namespace seqan::stl::ranges
