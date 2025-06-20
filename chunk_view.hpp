@@ -306,6 +306,10 @@ public:
     }
 };
 
+template <bool, std::ranges::view V>
+    requires std::ranges::forward_range<V>
+class chunk_view_iterator;
+
 template <std::ranges::view V>
     requires std::ranges::forward_range<V>
 class chunk_view<V> : public std::ranges::view_interface<chunk_view<V>>
@@ -314,8 +318,8 @@ private:
     V base_;
     std::ranges::range_difference_t<V> n_;
 
-    template <bool>
-    class iterator;
+    template <bool Const>
+    using iterator = chunk_view_iterator<Const, V>;
 
 public:
     chunk_view()
@@ -399,13 +403,12 @@ public:
     }
 };
 
-template <std::ranges::view V>
+template <bool Const, std::ranges::view V>
     requires std::ranges::forward_range<V>
-template <bool Const>
-class chunk_view<V>::iterator
+class chunk_view_iterator
 {
 private:
-    using Parent = seqan::stl::detail::maybe_const<Const, chunk_view>;
+    using Parent = seqan::stl::detail::maybe_const<Const, chunk_view<V>>;
     using Base = seqan::stl::detail::maybe_const<Const, V>;
 
     std::ranges::iterator_t<Base> current_ = std::ranges::iterator_t<Base>{};
@@ -413,7 +416,7 @@ private:
     std::ranges::range_difference_t<Base> n_ = 0;
     std::ranges::range_difference_t<Base> missing_ = 0;
 
-    constexpr iterator(Parent * parent,
+    constexpr chunk_view_iterator(Parent * parent,
                        std::ranges::iterator_t<Base> current,
                        std::ranges::range_difference_t<Base> missing = 0) :
         current_{current},
@@ -434,8 +437,8 @@ public:
     using value_type = decltype(std::views::take(std::ranges::subrange{current_, end_}, n_));
     using difference_type = std::ranges::range_difference_t<Base>;
 
-    iterator() = default;
-    constexpr iterator(iterator<!Const> i)
+    chunk_view_iterator() = default;
+    constexpr chunk_view_iterator(chunk_view_iterator<!Const, V> i)
         requires Const && std::convertible_to<std::ranges::iterator_t<V>, std::ranges::iterator_t<Base>>
                   && std::convertible_to<std::ranges::sentinel_t<V>, std::ranges::sentinel_t<Base>>
         : current_{std::move(i.current_)}, end_{std::move(i.end_)}, n_{i.n_}, missing_{i.missing_}
@@ -452,21 +455,21 @@ public:
         return std::views::take(std::ranges::subrange(current_, end_), n_);
     }
 
-    constexpr iterator & operator++()
+    constexpr chunk_view_iterator & operator++()
     {
         assert(current_ != end_);
         missing_ = std::ranges::advance(current_, n_, end_);
         return *this;
     }
 
-    constexpr iterator operator++(int)
+    constexpr chunk_view_iterator operator++(int)
     {
         auto tmp = *this;
         ++*this;
         return tmp;
     }
 
-    constexpr iterator & operator--()
+    constexpr chunk_view_iterator & operator--()
         requires std::ranges::bidirectional_range<Base>
     {
         std::ranges::advance(current_, missing_ - n_);
@@ -474,7 +477,7 @@ public:
         return *this;
     }
 
-    constexpr iterator operator--(int)
+    constexpr chunk_view_iterator operator--(int)
         requires std::ranges::bidirectional_range<Base>
     {
         auto tmp = *this;
@@ -482,7 +485,7 @@ public:
         return tmp;
     }
 
-    constexpr iterator & operator+=(difference_type x)
+    constexpr chunk_view_iterator & operator+=(difference_type x)
         requires std::ranges::random_access_range<Base>
     {
         assert(x <= 0 || std::ranges::distance(current_, end_) > n_ * (x - 1));
@@ -499,7 +502,7 @@ public:
         return *this;
     }
 
-    constexpr iterator & operator-=(difference_type x)
+    constexpr chunk_view_iterator & operator-=(difference_type x)
         requires std::ranges::random_access_range<Base>
     {
         return *this += -x;
@@ -511,49 +514,49 @@ public:
         return *(*this + n);
     }
 
-    friend constexpr bool operator==(iterator const & x, iterator const & y)
+    friend constexpr bool operator==(chunk_view_iterator const & x, chunk_view_iterator const & y)
     {
         return x.current_ == y.current_;
     }
 
-    friend constexpr bool operator==(iterator const & x, std::default_sentinel_t)
+    friend constexpr bool operator==(chunk_view_iterator const & x, std::default_sentinel_t)
     {
         return x.current_ == x.end_;
     }
 
-    friend constexpr bool operator<(iterator const & x, iterator const & y)
+    friend constexpr bool operator<(chunk_view_iterator const & x, chunk_view_iterator const & y)
         requires std::ranges::random_access_range<Base>
     {
         return x.current_ < y.current_;
     }
 
-    friend constexpr bool operator>(iterator const & x, iterator const & y)
+    friend constexpr bool operator>(chunk_view_iterator const & x, chunk_view_iterator const & y)
         requires std::ranges::random_access_range<Base>
     {
         return y < x;
     }
 
-    friend constexpr bool operator<=(iterator const & x, iterator const & y)
+    friend constexpr bool operator<=(chunk_view_iterator const & x, chunk_view_iterator const & y)
         requires std::ranges::random_access_range<Base>
     {
         return !(y < x);
     }
 
-    friend constexpr bool operator>=(iterator const & x, iterator const & y)
+    friend constexpr bool operator>=(chunk_view_iterator const & x, chunk_view_iterator const & y)
         requires std::ranges::random_access_range<Base>
     {
         return !(x < y);
     }
 
 #    ifdef __cpp_lib_three_way_comparison
-    friend constexpr auto operator<=>(iterator const & x, iterator const & y)
+    friend constexpr auto operator<=>(chunk_view_iterator const & x, chunk_view_iterator const & y)
         requires std::ranges::random_access_range<Base> && std::three_way_comparable<std::ranges::iterator_t<Base>>
     {
         return x.current_ <=> y.current_;
     }
 #    endif
 
-    friend constexpr iterator operator+(iterator const & i, difference_type n)
+    friend constexpr chunk_view_iterator operator+(chunk_view_iterator const & i, difference_type n)
         requires std::ranges::random_access_range<Base>
     {
         auto r = i;
@@ -561,7 +564,7 @@ public:
         return r;
     }
 
-    friend constexpr iterator operator+(difference_type n, iterator const & i)
+    friend constexpr chunk_view_iterator operator+(difference_type n, chunk_view_iterator const & i)
         requires std::ranges::random_access_range<Base>
     {
         auto r = i;
@@ -569,7 +572,7 @@ public:
         return r;
     }
 
-    friend constexpr iterator operator-(iterator const & i, difference_type n)
+    friend constexpr chunk_view_iterator operator-(chunk_view_iterator const & i, difference_type n)
         requires std::ranges::random_access_range<Base>
     {
         auto r = i;
@@ -577,19 +580,19 @@ public:
         return r;
     }
 
-    friend constexpr difference_type operator-(iterator const & x, iterator const & y)
+    friend constexpr difference_type operator-(chunk_view_iterator const & x, chunk_view_iterator const & y)
         requires std::sized_sentinel_for<std::ranges::sentinel_t<Base>, std::ranges::iterator_t<Base>>
     {
         return (x.current_ - y.current_ + x.missing_ - y.missing_) / x.n_;
     }
 
-    friend constexpr difference_type operator-(std::default_sentinel_t, iterator const & x)
+    friend constexpr difference_type operator-(std::default_sentinel_t, chunk_view_iterator const & x)
         requires std::sized_sentinel_for<std::ranges::sentinel_t<Base>, std::ranges::iterator_t<Base>>
     {
         return seqan::stl::detail::chunk::div_ceil(x.end_ - x.current_, x.n_);
     }
 
-    friend constexpr difference_type operator-(iterator const & x, std::default_sentinel_t y)
+    friend constexpr difference_type operator-(chunk_view_iterator const & x, std::default_sentinel_t y)
         requires std::sized_sentinel_for<std::ranges::sentinel_t<Base>, std::ranges::iterator_t<Base>>
     {
         return -(y - x);
