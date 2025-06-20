@@ -321,6 +321,9 @@ private:
     template <bool Const>
     using iterator = chunk_view_iterator<Const, V>;
 
+    friend iterator<false>;
+    friend iterator<true>;
+
 public:
     chunk_view()
         requires std::default_initializable<V>
