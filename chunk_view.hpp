@@ -53,38 +53,28 @@ constexpr auto to_unsigned_like(T v) noexcept
     return static_cast<std::make_unsigned_t<T>>(v);
 }
 
-//!WORKAROUND MSVC
-// MSVC uses std::_Signed128 as range the type of std::ranges::range_difference_t<V>.
-// For this we require a conversion function.
-#if defined(_MSC_VER) && !defined(__clang__)
-constexpr auto to_unsigned_like(std::_Signed128 v) noexcept
-{
-    return static_cast<uint64_t>(v);
-}
-constexpr auto to_unsigned_like(std::_Unsigned128 v) noexcept
-{
-    return static_cast<uint64_t>(v);
-}
+// !WORKAROUND: some STD libraries are using non standardized types
+// for return values in std::ranges::distance().
+// We call the to_unsigned_like() on these types and we must handle them
+// correctly.
+// MSVC: is using std::_Signed128
+// stdlibc++: is using __int128
+if defined(_MSC_VER) && !defined(__clang__)
+    using max_signed_t = std::_Signed128;
+    using max_unsigned_t = std::_Unsigned128;
+#else
+    __extension__ using max_signed_t = __int128;
+    __extension__ using max_unsigned_t = unsigned __int128;
 #endif
 
-//!WORKAROUND GCC/Clang and libstdc++
-// GCC uses __int128 as range type of example std::ranges::iota_view<size_t>
-// For this we require a conversion function, that
-// does not mention __int128, otherwise -pedantic will complain
-#if defined(__GNUC__) && !defined(_LIBCPP_VERSION)
-template <typename T>
-    requires (!std::integral<T> && requires(T v) { std::ranges::__detail::__to_unsigned_like(v); })
-constexpr auto to_unsigned_like(T v) noexcept
+constexpr auto to_unsigned_like(max_signed_t v) noexcept
 {
-    return std::ranges::__detail::__to_unsigned_like(v);
+    return static_cast<max_unsigned_t>(v);
 }
-template <typename T>
-    requires (!std::integral<T> && requires(T v) { std::ranges::__detail::__to_signed_like(v); })
-constexpr auto to_signed_like(T v) noexcept
+constexpr auto to_unsigned_like(max_unsigned_t v) noexcept
 {
-    return std::ranges::__detail::__to_signed_like(v);
+    return static_cast<max_unsigned_t>(v);
 }
-#endif
 
 } // namespace seqan::stl::detail::chunk
 
