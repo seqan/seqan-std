@@ -437,7 +437,7 @@ private:
         missing_{missing}
     {}
 
-    friend chunk_view;
+    friend chunk_view<V>;
 
 public:
     using iterator_category = std::input_iterator_tag;
