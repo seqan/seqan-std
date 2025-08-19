@@ -31,7 +31,6 @@ using std::ranges::views::chunk;
 #    include "all_view.hpp"
 #    include "concepts.hpp"
 #    include "detail/adaptor_from_functor.hpp"
-#    include "detail/compiler_definitions.hpp"
 #    include "detail/exposition_only.hpp"
 #    include "detail/non_propagating_cache.hpp"
 
@@ -59,13 +58,13 @@ constexpr auto to_unsigned_like(T v) noexcept
 // correctly.
 // MSVC: is using std::_Signed128
 // stdlibc++: is using __int128
-#if defined(_MSC_VER) && !defined(__clang__)
-    using max_signed_t = std::_Signed128;
-    using max_unsigned_t = std::_Unsigned128;
-#else
-    __extension__ using max_signed_t = __int128;
-    __extension__ using max_unsigned_t = unsigned __int128;
-#endif
+#    if defined(_MSC_VER) && !defined(__clang__)
+using max_signed_t = std::_Signed128;
+using max_unsigned_t = std::_Unsigned128;
+#    else
+__extension__ using max_signed_t = __int128;
+__extension__ using max_unsigned_t = unsigned __int128;
+#    endif
 
 constexpr auto to_unsigned_like(max_signed_t v) noexcept
 {
@@ -88,9 +87,7 @@ template <std::ranges::view V>
     requires std::ranges::input_range<V>
 class chunk_view<V> : public std::ranges::view_interface<chunk_view<V>>
 {
-    // clang-format off
-SEQAN_STD_NESTED_VISIBILITY
-    // clang-format on
+private:
     V base_;
     std::ranges::range_difference_t<V> n_;
     std::ranges::range_difference_t<V> remainder_ = 0;
@@ -429,8 +426,8 @@ private:
     std::ranges::range_difference_t<Base> missing_ = 0;
 
     constexpr chunk_view_iterator(Parent * parent,
-                       std::ranges::iterator_t<Base> current,
-                       std::ranges::range_difference_t<Base> missing = 0) :
+                                  std::ranges::iterator_t<Base> current,
+                                  std::ranges::range_difference_t<Base> missing = 0) :
         current_{current},
         end_{std::ranges::end(parent->base_)},
         n_{parent->n_},

@@ -29,7 +29,6 @@ using std::ranges::views::chunk_by;
 #    include "all_view.hpp"
 #    include "concepts.hpp"
 #    include "detail/adaptor_from_functor.hpp"
-#    include "detail/compiler_definitions.hpp"
 #    include "detail/movable_box.hpp"
 #    include "detail/non_propagating_cache.hpp"
 
