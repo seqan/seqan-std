@@ -59,7 +59,7 @@ constexpr auto to_unsigned_like(T v) noexcept
 // correctly.
 // MSVC: is using std::_Signed128
 // stdlibc++: is using __int128
-if defined(_MSC_VER) && !defined(__clang__)
+#if defined(_MSC_VER) && !defined(__clang__)
     using max_signed_t = std::_Signed128;
     using max_unsigned_t = std::_Unsigned128;
 #else
