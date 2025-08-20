@@ -29,7 +29,6 @@ using std::ranges::views::join_with;
 #    include "all_view.hpp"
 #    include "concepts.hpp"
 #    include "detail/adaptor_from_functor.hpp"
-#    include "detail/compiler_definitions.hpp"
 #    include "detail/exposition_only.hpp"
 #    include "detail/non_propagating_cache.hpp"
 
@@ -262,9 +261,7 @@ private:
 
     Parent * parent_{nullptr};
 
-    // clang-format off
-SEQAN_STD_NESTED_VISIBILITY
-    // clang-format on
+private:
     OuterIter outer_it_{};
 
 private:

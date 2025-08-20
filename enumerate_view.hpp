@@ -28,7 +28,6 @@ using std::ranges::views::enumerate;
 #    include "all_view.hpp"
 #    include "concepts.hpp"
 #    include "detail/adaptor_from_functor.hpp"
-#    include "detail/compiler_definitions.hpp"
 #    include "detail/exposition_only.hpp"
 
 namespace seqan::stl::ranges
@@ -38,9 +37,7 @@ template <std::ranges::view V>
     requires seqan::stl::detail::range_with_movable_references<V>
 class enumerate_view : public std::ranges::view_interface<enumerate_view<V>>
 {
-    // clang-format off
-SEQAN_STD_NESTED_VISIBILITY
-    // clang-format on
+private:
     V base_ = V();
 
     template <bool Const>

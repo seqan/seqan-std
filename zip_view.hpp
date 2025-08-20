@@ -30,7 +30,6 @@ using std::ranges::views::zip;
 
 #    include "all_view.hpp"
 #    include "concepts.hpp"
-#    include "detail/compiler_definitions.hpp"
 #    include "detail/exposition_only.hpp"
 #    include "pair.hpp"
 #    include "tuple.hpp"
@@ -224,9 +223,7 @@ private:
 
     friend class zip_view<Views...>;
 
-    // clang-format off
-SEQAN_STD_NESTED_VISIBILITY
-    // clang-format on
+private:
     seqan::stl::detail::zip::tuple_or_pair<std::ranges::iterator_t<seqan::stl::detail::maybe_const<Const, Views>>...>
         current_;
 
@@ -470,9 +467,7 @@ private:
 
     friend class zip_view<Views...>;
 
-    // clang-format off
-SEQAN_STD_NESTED_VISIBILITY
-    // clang-format on
+private:
     seqan::stl::detail::zip::tuple_or_pair<std::ranges::sentinel_t<seqan::stl::detail::maybe_const<Const, Views>>...>
         end_;
 
