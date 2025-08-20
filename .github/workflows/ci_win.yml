@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2006-2025 Knut Reinert & Freie Universität Berlin
+# SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
+# SPDX-License-Identifier: CC0-1.0
+
+name: Windows
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: windows-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+env:
+  TZ: Europe/Berlin
+
+jobs:
+  build:
+    name: ${{ matrix.generator }} C++${{ matrix.cpp }} ${{ matrix.build_type }}
+    runs-on: windows-2022
+    timeout-minutes: 60
+    if: github.repository_owner == 'seqan' || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        generator: ["Visual Studio 17 2022"]
+        cpp: [20, 23, 26]
+        build_type: [Release, Debug]
+    steps:
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Configure tests
+        run: |
+          New-Item -Name "build" -ItemType "directory" -Force
+          cd build
+          cmake .. -G "${{ matrix.generator }}" `
+                   -DCMAKE_CXX_FLAGS="/EHsc /W4" `
+                   -DCMAKE_CXX_STANDARD=${{ matrix.cpp }}
+
+      - name: Build tests
+        working-directory: build
+        run: cmake --build . --config "${{ matrix.build_type }}" --parallel
+
+      - name: Run tests
+        working-directory: build
+        run: ctest . -j -C "${{ matrix.build_type }}" --output-on-failure --no-tests=error --timeout 240
