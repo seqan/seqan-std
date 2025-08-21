@@ -11,11 +11,7 @@ project (SEQAN_STD
 )
 
 get_filename_component (SEQAN_STD_DIR_NAME "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
-if (NOT SEQAN_STD_DIR_NAME STREQUAL "seqan-std")
-    message (FATAL_ERROR "The directory name must be 'seqan-std'.")
-endif ()
-
-file (REAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.." SEQAN_STD_INCLUDE_DIR)
+file (REAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}" SEQAN_STD_INCLUDE_DIR)
 
 add_library (seqan-std INTERFACE)
 target_sources (seqan-std INTERFACE
