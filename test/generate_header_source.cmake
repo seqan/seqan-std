@@ -17,9 +17,6 @@ if (HEADER_SUB_TEST STREQUAL "no-self-include")
 
     string (REGEX REPLACE "#[a-z]+ +(// +)?SEQAN_STD[A-Z_]+\n" "" header_content "${header_content}")
 
-    string (REPLACE "#include \"adaptor_base.hpp\"" "#include <seqan-std/detail/adaptor_base.hpp>" header_content "${header_content}")
-    string (REGEX REPLACE "include \"([a-z_./]+)\"" "include <seqan-std/\\1>" header_content "${header_content}")
-
     file (APPEND "${HEADER_TARGET_SOURCE}"
         "// header-test-no-self-include-start\n"
         "${header_content}\n"

@@ -32,8 +32,9 @@ target_link_libraries (${target} seqan-std_test)
 add_test (NAME "header/${target}" COMMAND ${target})
 
 get_target_property (header_files seqan-std HEADER_SET_HEADERS)
+get_target_property (include_dir seqan-std HEADER_DIRS)
 foreach (absolute_header_path ${header_files})
-    file (RELATIVE_PATH header "${SEQAN_STD_INCLUDE_DIR}" "${absolute_header_path}")
+    file (RELATIVE_PATH header "${include_dir}" "${absolute_header_path}")
     get_filename_component (header_test_name "${absolute_header_path}" NAME_WE)
 
     foreach (header_sub_test "header-guard" "no-self-include")

@@ -11,7 +11,7 @@
 #ifndef SEQAN_STD_DETAIL_ADAPTOR_FOR_VIEW_WITHOUT_ARGS
 #define SEQAN_STD_DETAIL_ADAPTOR_FOR_VIEW_WITHOUT_ARGS
 
-#include "adaptor_base.hpp"
+#include <seqan-std/detail/adaptor_base.hpp>
 
 namespace seqan::stl::detail
 {

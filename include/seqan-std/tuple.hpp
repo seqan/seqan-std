@@ -23,8 +23,8 @@ using std::tuple;
 
 #else
 
-#    include "detail/exposition_only.hpp"
-#    include "pair.hpp"
+#    include <seqan-std/detail/exposition_only.hpp>
+#    include <seqan-std/pair.hpp>
 
 namespace seqan::stl
 {

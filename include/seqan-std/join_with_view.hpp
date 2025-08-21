@@ -26,11 +26,11 @@ using std::ranges::views::join_with;
 
 #    include <variant>
 
-#    include "all_view.hpp"
-#    include "concepts.hpp"
-#    include "detail/adaptor_from_functor.hpp"
-#    include "detail/exposition_only.hpp"
-#    include "detail/non_propagating_cache.hpp"
+#    include <seqan-std/all_view.hpp>
+#    include <seqan-std/concepts.hpp>
+#    include <seqan-std/detail/adaptor_from_functor.hpp>
+#    include <seqan-std/detail/exposition_only.hpp>
+#    include <seqan-std/detail/non_propagating_cache.hpp>
 
 namespace seqan::stl::detail::join_with
 {
