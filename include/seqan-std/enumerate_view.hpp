@@ -25,10 +25,10 @@ using std::ranges::views::enumerate;
 
 #else
 
-#    include "all_view.hpp"
-#    include "concepts.hpp"
-#    include "detail/adaptor_from_functor.hpp"
-#    include "detail/exposition_only.hpp"
+#    include <seqan-std/all_view.hpp>
+#    include <seqan-std/concepts.hpp>
+#    include <seqan-std/detail/adaptor_from_functor.hpp>
+#    include <seqan-std/detail/exposition_only.hpp>
 
 namespace seqan::stl::ranges
 {

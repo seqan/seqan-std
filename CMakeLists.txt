@@ -10,35 +10,28 @@ project (SEQAN_STD
          DESCRIPTION "Implementation of several C++23/26 views"
 )
 
-get_filename_component (SEQAN_STD_DIR_NAME "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
-if (NOT SEQAN_STD_DIR_NAME STREQUAL "seqan-std")
-    message (FATAL_ERROR "The directory name must be 'seqan-std'.")
-endif ()
-
-file (REAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.." SEQAN_STD_INCLUDE_DIR)
-
 add_library (seqan-std INTERFACE)
 target_sources (seqan-std INTERFACE
     FILE_SET HEADERS
     TYPE HEADERS
-    BASE_DIRS ${SEQAN_STD_INCLUDE_DIR}
+    BASE_DIRS ${PROJECT_SOURCE_DIR}/include
     FILES
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/all_view.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/chunk_by_view.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/chunk_view.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/concepts.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/detail/adaptor_base.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/detail/adaptor_for_view_without_args.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/detail/adaptor_from_functor.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/detail/exposition_only.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/detail/movable_box.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/detail/non_propagating_cache.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/enumerate_view.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/join_with_view.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/pair.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/to.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/tuple.hpp
-        ${SEQAN_STD_INCLUDE_DIR}/seqan-std/zip_view.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/all_view.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/chunk_by_view.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/chunk_view.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/concepts.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/detail/adaptor_base.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/detail/adaptor_for_view_without_args.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/detail/adaptor_from_functor.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/detail/exposition_only.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/detail/movable_box.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/detail/non_propagating_cache.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/enumerate_view.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/join_with_view.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/pair.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/to.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/tuple.hpp
+        ${PROJECT_SOURCE_DIR}/include/seqan-std/zip_view.hpp
 )
 target_compile_features (seqan-std INTERFACE cxx_std_20)
 add_library (seqan::std ALIAS seqan-std)

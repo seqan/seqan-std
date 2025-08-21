@@ -21,7 +21,7 @@ using std::ranges::viewable_range;
 
 }
 #else
-#    include "detail/exposition_only.hpp"
+#    include <seqan-std/detail/exposition_only.hpp>
 namespace seqan::stl::ranges
 {
 

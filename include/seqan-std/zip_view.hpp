@@ -28,11 +28,11 @@ using std::ranges::views::zip;
 #    include <algorithm>
 #    include <functional>
 
-#    include "all_view.hpp"
-#    include "concepts.hpp"
-#    include "detail/exposition_only.hpp"
-#    include "pair.hpp"
-#    include "tuple.hpp"
+#    include <seqan-std/all_view.hpp>
+#    include <seqan-std/concepts.hpp>
+#    include <seqan-std/detail/exposition_only.hpp>
+#    include <seqan-std/pair.hpp>
+#    include <seqan-std/tuple.hpp>
 
 namespace seqan::stl::detail::zip
 {

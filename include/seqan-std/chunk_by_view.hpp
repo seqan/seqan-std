@@ -26,11 +26,11 @@ using std::ranges::views::chunk_by;
 
 #else
 
-#    include "all_view.hpp"
-#    include "concepts.hpp"
-#    include "detail/adaptor_from_functor.hpp"
-#    include "detail/movable_box.hpp"
-#    include "detail/non_propagating_cache.hpp"
+#    include <seqan-std/all_view.hpp>
+#    include <seqan-std/concepts.hpp>
+#    include <seqan-std/detail/adaptor_from_functor.hpp>
+#    include <seqan-std/detail/movable_box.hpp>
+#    include <seqan-std/detail/non_propagating_cache.hpp>
 
 namespace seqan::stl::ranges
 {

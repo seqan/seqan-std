@@ -30,9 +30,9 @@ using std::ranges::views::all_t;
 
 } // namespace seqan::stl::views
 #else
-#    include "concepts.hpp"
-#    include "detail/adaptor_base.hpp"
-#    include "detail/exposition_only.hpp"
+#    include <seqan-std/concepts.hpp>
+#    include <seqan-std/detail/adaptor_base.hpp>
+#    include <seqan-std/detail/exposition_only.hpp>
 
 namespace seqan::stl::ranges
 {

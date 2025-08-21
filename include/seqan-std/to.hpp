@@ -35,7 +35,7 @@ using std::ranges::to;
 
 #    include <algorithm>
 
-#    include "detail/adaptor_from_functor.hpp"
+#    include <seqan-std/detail/adaptor_from_functor.hpp>
 
 namespace seqan::stl
 {
