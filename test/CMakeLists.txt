@@ -82,3 +82,54 @@ add_test (NAME "file_set_check"
                                    -P "${CMAKE_CURRENT_SOURCE_DIR}/check_file_set.cmake")
 
 set_tests_properties (header_test PROPERTIES DEPENDS file_set_check)
+
+################################################################################
+############################ CPM integration check #############################
+################################################################################
+
+set (CPM_FILE "${CMAKE_CURRENT_BINARY_DIR}/CPM.cmake" CACHE STRING "Path to CPM.cmake")
+
+if (FETCHCONTENT_FULLY_DISCONNECTED AND NOT EXISTS "${CPM_FILE}")
+    message (STATUS "Not testing CPM integration.")
+    return ()
+endif ()
+
+if (NOT EXISTS "${CPM_FILE}")
+    file (DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/CPM.cmake
+          ${CPM_FILE}
+          STATUS cpm_download_status)
+
+    list (GET cpm_download_status 0 cpm_download_return_code)
+    list (GET cpm_download_status 1 cpm_download_message)
+
+    if (NOT ${cpm_download_return_code} EQUAL 0)
+        message (WARNING "CPM download failed. "
+                         "Exit code: ${cpm_download_return_code}. "
+                         "Message: ${cpm_download_message}")
+        return ()
+    endif ()
+endif ()
+
+include (ExternalProject)
+
+ExternalProject_Add (CPM_integration_test
+                     PREFIX CPM_integration_test
+                     SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/CPM"
+                     CMAKE_ARGS "-DCPM_FILE=${CPM_FILE}"
+                                "-DCPM_seqan-std_SOURCE=${PROJECT_SOURCE_DIR}"
+                     INSTALL_COMMAND "")
+
+ExternalProject_Get_Property (CPM_integration_test BINARY_DIR)
+ExternalProject_Get_Property (CPM_integration_test SOURCE_DIR)
+
+message (STATUS "${SOURCE_DIR}")
+
+set (expected_output "0: Hello\n1: World\n2: !\n")
+
+add_test (NAME "example_test" COMMAND "${BINARY_DIR}/example")
+set_tests_properties (example_test PROPERTIES
+                      PASS_REGULAR_EXPRESSION "${expected_output}")
+
+add_test (NAME "example_output" COMMAND ${CMAKE_COMMAND} -E cat "${CMAKE_CURRENT_LIST_DIR}/CPM/example.expected")
+set_tests_properties (example_output PROPERTIES
+                      PASS_REGULAR_EXPRESSION "${expected_output}")

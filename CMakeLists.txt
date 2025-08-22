@@ -10,6 +10,10 @@ project (SEQAN_STD
          DESCRIPTION "Implementation of several C++23/26 views"
 )
 
+if (TARGET seqan::std)
+    return ()
+endif ()
+
 add_library (seqan-std INTERFACE)
 target_sources (seqan-std INTERFACE
     FILE_SET HEADERS
